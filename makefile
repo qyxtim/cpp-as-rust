@@ -1,6 +1,6 @@
 # compilers and constant flags
 CC = g++
-CFLAGS = -Wall -Werror -Wextra -Wpedantic -Wvla -Wextra-semi -Wnull-dereference -Wswitch-enum -Wsuggest-override -std=c++17
+CFLAGS = -Wall -Werror -Wextra -Wpedantic -Wvla -Wextra-semi -Wnull-dereference -Wsuggest-override -std=c++17
 # constants
 SRCDIR = src
 TESTDIR = test
@@ -21,7 +21,7 @@ LDFLAGS =
 ifeq ($(debug), 1)
 	TARGETDIR = $(BASE_TARGETDIR)/debug
 	BUILDDIR = $(BASE_BUILDDIR)/debug
-	CDFLAGS = -g -fsanitize=address,undefined
+	CDFLAGS = -Og -g -fsanitize=address,undefined
 	LDFLAGS = -fsanitize=address,undefined
 endif
 

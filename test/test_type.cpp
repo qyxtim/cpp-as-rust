@@ -1,7 +1,7 @@
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include "csr.h"
 
-TEST_CASE("Size of the type Should be correct"){
+TEST_CASE("Size of the type Should be correct", "[Types]"){
     REQUIRE(sizeof(u8) == 1);
     REQUIRE(sizeof(u16) == 2);
     REQUIRE(sizeof(u32) == 4);

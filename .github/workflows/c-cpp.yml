@@ -15,13 +15,15 @@ jobs:
 
     steps:
     - uses: actions/checkout@v3
-    - name: make
-      run: |
-        make
-        make debug=1
-    - name: run release
+    - name: make (All)
+      run: make
+    - name: make debug (Linux, Mac)
+      if: matrix.os != 'windows-latest'
+      run: make debug=1
+    - name: run release (All)
       run: make run
-    - name: run sanitizer
+    - name: run sanitizer (Linux, Mac)
+      if: matrix.os != 'windows-latest'
       run: make sanitizer
     - name: run valgrind (Linux)
       if: matrix.os == 'ubuntu-latest'

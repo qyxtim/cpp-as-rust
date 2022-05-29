@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include "catch_amalgamated.hpp"
 #include "csr.h"
 
 using namespace csr;
@@ -8,14 +8,14 @@ struct ATestClass
     u8 x;
 };
 
-TEST_CASE("Should be able to construct Result via Ok and Err")
+TEST_CASE("Should be able to construct Result via Ok and Err", "[Result]")
 {
     Result<usize, std::exception>::Ok(0);
     Result<i32, std::exception>::Err({});
     Result<ATestClass, std::exception>::Ok({});
 }
 
-TEST_CASE("is_ok and is_err should return correct boolean value")
+TEST_CASE("is_ok and is_err should return correct boolean value", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Ok(0);
     REQUIRE(res1.is_ok());
@@ -30,7 +30,7 @@ TEST_CASE("is_ok and is_err should return correct boolean value")
     REQUIRE_FALSE(res3.is_err());
 }
 
-TEST_CASE("Should be able to move construct/assign from existing Result")
+TEST_CASE("Should be able to move construct/assign from existing Result", "[Result]")
 {
     Result<ATestClass, std::exception> res1 = Result<ATestClass, std::exception>::Ok({});
     REQUIRE(res1.is_ok());
@@ -44,7 +44,7 @@ TEST_CASE("Should be able to move construct/assign from existing Result")
     REQUIRE(res3.is_ok());
 }
 
-TEST_CASE("Should be able to observe the Ok Result via unwrap and expect")
+TEST_CASE("Should observe Ok Result via unwrap and expect", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Ok(0);
     REQUIRE(res1.unwrap() == 0);
@@ -55,7 +55,7 @@ TEST_CASE("Should be able to observe the Ok Result via unwrap and expect")
     REQUIRE(res2.expect("Test Expect").x == 0);
 }
 
-TEST_CASE("Should throw bad_option_access if observing Err via unwrap and expect")
+TEST_CASE("Should throw bad_option_access if observing Err", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Err({});
     REQUIRE_THROWS_AS(res1.unwrap(), csr::bad_result_access);
@@ -66,7 +66,7 @@ TEST_CASE("Should throw bad_option_access if observing Err via unwrap and expect
     REQUIRE_THROWS_AS(res2.expect("Expect to Throw"), csr::bad_result_access);
 }
 
-TEST_CASE("Should be able to observe the Err Result via unwrap_err and expect_err")
+TEST_CASE("Should observe Err Result via unwrap_err and expect_err", "[Result]")
 {
     auto res1 = Result<usize, u8>::Err('a');
     REQUIRE(res1.unwrap_err() == 'a');
@@ -77,7 +77,7 @@ TEST_CASE("Should be able to observe the Err Result via unwrap_err and expect_er
     REQUIRE(res2.expect_err("Test Expect") == std::string{"Hello World"});
 }
 
-TEST_CASE("unwrap_or Should return the correct value")
+TEST_CASE("unwrap_or Should return the correct value", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Err({});
     REQUIRE(res1.unwrap_or(1) == 1);
@@ -86,7 +86,7 @@ TEST_CASE("unwrap_or Should return the correct value")
     REQUIRE(res2.unwrap_or({0}).x == 1);
 }
 
-TEST_CASE("Should be able to convert to an Option")
+TEST_CASE("Should convert to an Option", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Ok(0);
     auto op1 = res1.ok();
