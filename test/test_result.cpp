@@ -10,9 +10,9 @@ struct ATestClass
 
 TEST_CASE("Should be able to construct Result via Ok and Err", "[Result]")
 {
-    Result<usize, std::exception>::Ok(0);
-    Result<i32, std::exception>::Err({});
-    Result<ATestClass, std::exception>::Ok({});
+    Result<usize, std::exception>::Ok(0).unwrap();
+    Result<i32, std::exception>::Err({}).unwrap_err();
+    Result<ATestClass, std::exception>::Ok({}).unwrap();
 }
 
 TEST_CASE("is_ok and is_err should return correct boolean value", "[Result]")

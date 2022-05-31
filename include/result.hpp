@@ -11,7 +11,7 @@ namespace csr
     };
 
     template <typename T, typename E>
-    class Result
+    class [[nodiscard]] Result
     {
     private:
         std::variant<T, E> res;
