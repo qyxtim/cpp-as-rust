@@ -58,12 +58,12 @@ TEST_CASE("Should observe Ok Result via unwrap and expect", "[Result]")
 TEST_CASE("Should throw bad_option_access if observing Err", "[Result]")
 {
     auto res1 = Result<usize, std::exception>::Err({});
-    REQUIRE_THROWS_AS(res1.unwrap(), csr::bad_result_access);
-    REQUIRE_THROWS_AS(res1.expect("Expect to Throw"), csr::bad_result_access);
+    REQUIRE_THROWS_AS(res1.unwrap(), std::exception);
+    REQUIRE_THROWS_AS(res1.expect("Expect to Throw"), std::exception);
 
     auto res2 = Result<ATestClass, std::exception>::Err({});
-    REQUIRE_THROWS_AS(res2.unwrap(), csr::bad_result_access);
-    REQUIRE_THROWS_AS(res2.expect("Expect to Throw"), csr::bad_result_access);
+    REQUIRE_THROWS_AS(res2.unwrap(), std::exception);
+    REQUIRE_THROWS_AS(res2.expect("Expect to Throw"), std::exception);
 }
 
 TEST_CASE("Should observe Err Result via unwrap_err and expect_err", "[Result]")

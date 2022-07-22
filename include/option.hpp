@@ -1,126 +1,109 @@
 #pragma once
 
-#include "macro.h"
+#include <cstdio>
 #include <optional>
 #include <string>
 #include <utility>
 
-namespace csr
-{
-    template <typename T>
-    class Option
-    {
-    private:
-        std::optional<T> option;
+namespace csr {
+template <typename T> class Option {
+private:
+  std::optional<T> option;
 
-    private:
-        Option(T &&val);
-        Option(std::optional<T> &&other);
+private:
+  Option(T &&val);
+  Option(std::optional<T> &&other);
 
-    public:
-        Option(Option<T> &&other);
-        Option &operator=(Option<T> &&other);
-        ~Option() = default;
-        Option() = delete;
-        Option(const Option<T> &_) = delete;
-        Option &operator=(const Option<T> &_) = delete;
+  template <typename X> Option process(Option<X> &&other);
 
-        bool is_some() const;
-        bool is_none() const;
+public:
+  Option(Option<T> &&other);
 
-        // Observer
-        const T &expect(const std::string &message) const;
-        T &expect(const std::string &message);
-        const T &unwrap() const;
-        T &unwrap();
+  template <typename X> Option(Option<X> &&other);
 
-        T unwrap_or(T &&default_value);
+  Option &operator=(Option<T> &&other);
+  ~Option() = default;
+  Option() = delete;
+  Option(const Option<T> &_) = delete;
+  Option &operator=(const Option<T> &_) = delete;
 
-        inline static Option<T> Some(T &&x);
-        inline static Option<T> None();
-    };
+  bool is_some() const;
+  bool is_none() const;
 
-    template <typename T>
-    Option<T>::Option(T &&val) : option(std::move(val))
-    {
-    }
+  // Observer
+  const T &expect(const std::string &message) const;
+  T &expect(const std::string &message);
+  const T &unwrap() const;
+  T &unwrap();
 
-    template <typename T>
-    Option<T>::Option(std::optional<T> &&other) : option(std::move(other))
-    {
-    }
+  T unwrap_or(T &&default_value);
 
-    template <typename T>
-    Option<T>::Option(Option<T> &&other) : option(std::move(other.option))
-    {
-    }
+  inline static Option<T> Some(T &&x);
+  inline static Option<T> None();
+};
 
-    template <typename T>
-    Option<T> &Option<T>::operator=(Option<T> &&other)
-    {
-        option = std::move(other.option);
-        return *this;
-    }
+template <typename T> Option<T>::Option(T &&val) : option(std::move(val)) {}
 
-    template <typename T>
-    bool Option<T>::is_some() const
-    {
-        return option.has_value();
-    }
+template <typename T>
+Option<T>::Option(std::optional<T> &&other) : option(std::move(other)) {}
 
-    template <typename T>
-    bool Option<T>::is_none() const
-    {
-        return !is_some();
-    }
+template <typename T>
+Option<T>::Option(Option<T> &&other) : option(std::move(other.option)) {}
 
-    template <typename T>
-    const T &Option<T>::expect(const std::string &message) const
-    {
-        if (is_none())
-        {
-            eprintln("%s", message.c_str());
-        }
-        return option.value();
-    }
+template <typename T>
+template <typename X>
+Option<T>::Option(Option<X> &&other) : Option(process(std::move(other))) {}
 
-    template <typename T>
-    T &Option<T>::expect(const std::string &message)
-    {
-        if (is_none())
-        {
-            eprintln("%s", message.c_str());
-        }
-        return option.value();
-    }
-
-    template <typename T>
-    const T &Option<T>::unwrap() const
-    {
-        return option.value();
-    }
-
-    template <typename T>
-    T &Option<T>::unwrap()
-    {
-        return option.value();
-    }
-
-    template <typename T>
-    T Option<T>::unwrap_or(T &&default_value)
-    {
-        return is_some() ? unwrap() : default_value;
-    }
-
-    template <typename T>
-    inline Option<T> Option<T>::Some(T &&x)
-    {
-        return Option<T>(std::move(x));
-    }
-
-    template <typename T>
-    inline Option<T> Option<T>::None()
-    {
-        return Option<T>(std::nullopt);
-    }
+template <typename T> Option<T> &Option<T>::operator=(Option<T> &&other) {
+  option = std::move(other.option);
+  return *this;
 }
+
+template <typename T>
+template <typename X>
+Option<T> Option<T>::process(Option<X> &&other) {
+  if (other.is_some()) {
+    return Option<T>::Some(std::move(other.unwrap()));
+  }
+  return Option<T>::None();
+}
+
+template <typename T> bool Option<T>::is_some() const {
+  return option.has_value();
+}
+
+template <typename T> bool Option<T>::is_none() const { return !is_some(); }
+
+template <typename T>
+const T &Option<T>::expect(const std::string &message) const {
+  if (is_none()) {
+    fprintf(stderr, "%s\n", message.c_str());
+  }
+  return option.value();
+}
+
+template <typename T> T &Option<T>::expect(const std::string &message) {
+  if (is_none()) {
+    fprintf(stderr, "%s\n", message.c_str());
+  }
+  return option.value();
+}
+
+template <typename T> const T &Option<T>::unwrap() const {
+  return option.value();
+}
+
+template <typename T> T &Option<T>::unwrap() { return option.value(); }
+
+template <typename T> T Option<T>::unwrap_or(T &&default_value) {
+  return is_some() ? unwrap() : default_value;
+}
+
+template <typename T> inline Option<T> Option<T>::Some(T &&x) {
+  return Option<T>(std::move(x));
+}
+
+template <typename T> inline Option<T> Option<T>::None() {
+  return Option<T>(std::nullopt);
+}
+} // namespace csr
