@@ -19,7 +19,7 @@ public:
   Result(Result &&other);
   Result &operator=(Result &&other);
   ~Result() = default;
-  Result() = delete;
+  Result() = default;
   Result(const Result &_) = delete;
   Result &operator=(const Result &_) = delete;
 
